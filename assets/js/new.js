@@ -1,7 +1,5 @@
-// Get task completion status from localStorage
-const taskCompleted = localStorage.getItem('taskCompleted');
+// Get checkmark element
 const checkmark = document.getElementById('checkmark');
-//const completionMessage = document.getElementById('completionMessage');
 
 // Array of button IDs
 const buttonIds = [
@@ -18,25 +16,25 @@ const buttonIds = [
   'turboButton10'
 ];
 
-// Function to set button state to 'Completed' if task is already done
+// Function to set button state to 'Completed'
 function setButtonCompleted(button) {
   button.innerText = 'Completed';
   button.disabled = true;
   checkmark.style.display = 'inline';
-  //completionMessage.style.display = 'block'; // Show message at the bottom
 }
 
 // Add click event listener and timeout function to each button
-function addButtonClickListener(button) {
+function addButtonClickListener(button, buttonId) {
   button.addEventListener('click', function () {
     button.disabled = true;
     button.innerText = 'Processing...';
     
-    // Simulate processing for 5 seconds before marking as completed
+    // Simulate processing for 10 seconds before marking as completed
     setTimeout(function () {
-      checkmark.style.display = 'inline';
       button.innerText = 'Completed';
-      localStorage.setItem('taskCompleted', 'true');
+      button.disabled = true;
+      checkmark.style.display = 'inline';
+      localStorage.setItem(`taskCompleted_${buttonId}`, 'true'); // Store completion status for this specific button
     }, 10000);
   });
 }
@@ -44,9 +42,11 @@ function addButtonClickListener(button) {
 // Iterate over each button and apply the logic
 buttonIds.forEach(function (id) {
   const button = document.getElementById(id);
+  const taskCompleted = localStorage.getItem(`taskCompleted_${id}`); // Get task completion for this specific button
+  
   if (taskCompleted) {
-    setButtonCompleted(button);
+    setButtonCompleted(button); // If this button's task was already completed
   } else {
-    addButtonClickListener(button);
+    addButtonClickListener(button, id); // Otherwise, add event listener to the button
   }
 });
