@@ -37,7 +37,7 @@ if (count === null) {
 // Fetch user ID and username from your server
 async function fetchUserData() {
     try {
-        const response = await fetch('https://1dc2-138-199-53-248.ngrok-free.app -> http://localhost:8080 ');
+        const response = await fetch('https://1dc2-138-199-53-248.ngrok-free.app/get_user_data');
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
