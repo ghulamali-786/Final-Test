@@ -21,7 +21,6 @@ if(total == null){
     body.querySelector('#total').textContent = `/${total}`;
 }
 
-
 if(power == null){
     localStorage.setItem('power' , '500');
     body.querySelector('#power').textContent = '500';
@@ -29,16 +28,13 @@ if(power == null){
     body.querySelector('#power').textContent = power;
 }
 
-
 if(count == null){
     localStorage.setItem('count' , '1')
 }
 
 image.addEventListener('click' , (e)=> {
-
     let x = e.offsetX;
     let y = e.offsetY;
-
 
     navigator.vibrate(5);
 
@@ -51,7 +47,31 @@ image.addEventListener('click' , (e)=> {
     
         localStorage.setItem('power' , `${Number(power) - 1}`);
         body.querySelector('#power').textContent = `${Number(power) - 1}`;
-    } 
+        
+        // Fetch API call to send coin data to the server
+        const userId = "12345";  // Replace with the actual user ID
+        const username = "test_user";  // Replace with the actual username
+        const coinData = {
+            user_id: userId,
+            username: username,
+            coins: Number(coins) + 1
+        };
+
+        fetch('http://localhost:5000/save-coins', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(coinData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
 
     if(x < 150 & y < 150){
         image.style.transform = 'translate(-0.25rem, -0.25rem) skewY(-10deg) skewX(5deg)';
@@ -66,9 +86,8 @@ image.addEventListener('click' , (e)=> {
         image.style.transform = 'translate(0.25rem, -0.25rem) skewY(10deg) skewX(-5deg)';
     }
 
-
     setTimeout(()=>{
-        image.style.transform = 'translate(0px, 0px)';
+        image.style.transform = 'translate(0px, 0px) scale(1.1)';
     }, 100);
 
     body.querySelector('.progress').style.width = `${(100 * power) / total}%`;
